@@ -1,18 +1,26 @@
 package entities;
 
 import fileio.InputDistributor;
+import strategies.EnergyChoiceStrategyType;
+import strategies.StrategyFactory;
+import strategies.StrategyPriorities;
 import utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
-public final class Distributor implements Entity {
+public final class Distributor implements Entity, Observer {
     private int id;
     private int contractLength;
     private int budget;
     private int infrastructureCost;
     private long productionCost;
+    private int energyNeededKW;
+    private String producerStrategy;
+
+    private StrategyPriorities strategy;
+    List<Producer> producers = new ArrayList<>();
 
     /**
      * Monthly offer for contract
@@ -26,10 +34,47 @@ public final class Distributor implements Entity {
         this.id = distributor.getId();
         this.contractLength = distributor.getContractLength();
         this.budget = distributor.getInitialBudget();
-        this.productionCost = distributor.getInitialProductionCost();
         this.infrastructureCost = distributor.getInitialInfrastructureCost();
+        this.energyNeededKW = distributor.getEnergyNeededKW();
+        this.producerStrategy = distributor.getProducerStrategy();
+        this.strategy = initStrategy();
     }
 
+    private StrategyPriorities initStrategy() {
+        StrategyFactory strategyFactory = StrategyFactory.getInstance();
+        return strategyFactory.createStrategy(producerStrategy);
+    }
+
+    public void executeStrategy(List<Producer> producers) {
+        strategy.chooseProducers(producers);
+    }
+
+    public void calculateProductionCost() {
+        productionCost = 0;
+        producers.forEach(producer -> productionCost += (producer.getEnergyPerDistributor() * producer.getPriceKW()));
+        productionCost = Math.round(Math.floor(productionCost/ 10));
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    public int getEnergyNeededKW() {
+        return energyNeededKW;
+    }
+
+    public void setEnergyNeededKW(int energyNeededKW) {
+        this.energyNeededKW = energyNeededKW;
+    }
+
+    public String getProducerStrategy() {
+        return producerStrategy;
+    }
+
+    public void setProducerStrategy(String producerStrategy) {
+        this.producerStrategy = producerStrategy;
+    }
 
     public boolean isBankrupt() {
         return isBankrupt;

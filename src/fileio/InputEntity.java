@@ -11,14 +11,4 @@ public abstract class InputEntity {
      * Method that sets the id of an entity.
      */
     public abstract void setId(int id);
-
-    /**
-     * @return the initialBudget of an entity.
-     */
-    public abstract int getInitialBudget();
-
-    /**
-     * Method that sets the initialBudget of an entity.
-     */
-    public abstract void setInitialBudget(int initialBudget);
 }

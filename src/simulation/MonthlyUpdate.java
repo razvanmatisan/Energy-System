@@ -3,15 +3,18 @@ package simulation;
 import entities.Consumer;
 import entities.Distributor;
 import entities.EntityFactory;
+import entities.Producer;
 import fileio.InputConsumer;
 import utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class MonthlyUpdate {
     private List<InputConsumer> newConsumers = new ArrayList<>();
-    private List<CostsChange> costsChanges = new ArrayList<>();
+    private List<DistributorChanges> distributorChanges = new ArrayList<>();
+    private List<ProducerChanges> producerChanges = new ArrayList<>();
 
     public List<InputConsumer> getNewConsumers() {
         return newConsumers;
@@ -21,33 +24,41 @@ public final class MonthlyUpdate {
         this.newConsumers = newConsumers;
     }
 
-    public List<CostsChange> getCostsChanges() {
-        return costsChanges;
+    public List<DistributorChanges> getDistributorChanges() {
+        return distributorChanges;
     }
 
-    public void setCostsChanges(final List<CostsChange> costsChanges) {
-        this.costsChanges = costsChanges;
+    public void setDistributorChanges(List<DistributorChanges> distributorChanges) {
+        this.distributorChanges = distributorChanges;
     }
 
-    /**
-     * Method that executes all updates from that month.
-     */
-    public void update(final List<Distributor> distributors) {
+    public List<ProducerChanges> getProducerChanges() {
+        return producerChanges;
+    }
+
+    public void setProducerChanges(List<ProducerChanges> producerChanges) {
+        this.producerChanges = producerChanges;
+    }
+
+    public void updateConsumers() {
         Simulation simulation = Simulation.getInstance();
         EntityFactory factory = EntityFactory.getInstance();
         Database database = Database.getInstance();
 
-        List<Consumer> consumers = new ArrayList<>();
-        for (InputConsumer newConsumer : newConsumers) {
-            Consumer consumer = (Consumer) factory.createEntity(newConsumer, Constants.CONSUMER);
-            consumers.add(consumer);
-        }
+        List<Consumer> consumers = newConsumers.stream()
+                .map(newConsumer -> (Consumer) factory.createEntity(newConsumer, Constants.CONSUMER))
+                .collect(Collectors.toList());
 
         database.addConsumers(consumers);
         simulation.addConsumers(consumers);
+    }
 
-        for (CostsChange costsChange : costsChanges) {
-            costsChange.update(distributors);
-        }
+
+    public void updateDistributor(final List<Distributor> distributors) {
+        distributorChanges.forEach(distributorChange -> distributorChange.update(distributors));
+    }
+
+    public void updateProducer(final List<Producer> producers) {
+        producerChanges.forEach(producerChange -> producerChange.update(producers));
     }
 }

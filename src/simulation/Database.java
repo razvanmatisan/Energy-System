@@ -3,8 +3,10 @@ package simulation;
 import entities.Consumer;
 import entities.Distributor;
 import entities.EntityFactory;
+import entities.Producer;
 import fileio.InputConsumer;
 import fileio.InputDistributor;
+import fileio.InputProducer;
 import utils.Constants;
 
 import java.util.ArrayList;
@@ -16,6 +18,7 @@ import java.util.List;
 public final class Database {
     private final List<Consumer> consumers = new ArrayList<>();
     private final List<Distributor> distributors = new ArrayList<>();
+    private final List<Producer> producers = new ArrayList<>();
 
     private static Database instance;
 
@@ -56,6 +59,17 @@ public final class Database {
         this.distributors.addAll(newDistributors);
     }
 
+    public List<Producer> getProducers() {
+        return producers;
+    }
+
+    /**
+     * Setter for distributors.
+     */
+    public void setProducers(final List<Producer> newProducers) {
+        this.producers.addAll(newProducers);
+    }
+
     /**
      * Method that resets the instance.
      */
@@ -76,18 +90,20 @@ public final class Database {
      * @param newDistributors new Distributors.
      */
     public void addEntities(final List<InputConsumer> newConsumers,
-                            final List<InputDistributor> newDistributors) {
+                            final List<InputDistributor> newDistributors,
+                            final List<InputProducer> newProducers) {
         EntityFactory factory = EntityFactory.getInstance();
 
-        for (InputConsumer inputConsumer : newConsumers) {
-            Consumer consumer = (Consumer) factory.createEntity(inputConsumer, Constants.CONSUMER);
-            consumers.add(consumer);
-        }
+        newConsumers.stream()
+                .map(inputConsumer -> (Consumer) factory.createEntity(inputConsumer, Constants.CONSUMER))
+                .forEach(consumers::add);
 
-        for (InputDistributor inputDistributor : newDistributors) {
-            Distributor distributor
-                    = (Distributor) factory.createEntity(inputDistributor, Constants.DISTRIBUTOR);
-            distributors.add(distributor);
-        }
+        newDistributors.stream()
+                .map(inputDistributor -> (Distributor) factory.createEntity(inputDistributor, Constants.DISTRIBUTOR))
+                .forEach(distributors::add);
+
+        newProducers.stream()
+                .map(inputProducer -> (Producer) factory.createEntity(inputProducer, Constants.PRODUCER))
+                .forEach(producers::add);
     }
 }

@@ -3,6 +3,7 @@ package entities;
 import fileio.InputConsumer;
 import fileio.InputDistributor;
 import fileio.InputEntity;
+import fileio.InputProducer;
 import utils.Constants;
 
 /**
@@ -41,6 +42,9 @@ public final class EntityFactory {
             }
             case (Constants.DISTRIBUTOR) -> {
                 return new Distributor((InputDistributor) inputEntity);
+            }
+            case (Constants.PRODUCER) -> {
+                return new Producer((InputProducer) inputEntity);
             }
             default -> throw new IllegalStateException("Unexpected value: " + typeEntity);
         }

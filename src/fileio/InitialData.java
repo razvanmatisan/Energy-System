@@ -8,6 +8,7 @@ import java.util.List;
 public final class InitialData {
     private List<InputConsumer> consumers;
     private List<InputDistributor> distributors;
+    private List<InputProducer> producers;
 
     public List<InputConsumer> getConsumers() {
         return consumers;
@@ -23,5 +24,13 @@ public final class InitialData {
 
     public void setDistributors(final List<InputDistributor> distributors) {
         this.distributors = distributors;
+    }
+
+    public List<InputProducer> getProducers() {
+        return producers;
+    }
+
+    public void setProducers(List<InputProducer> producers) {
+        this.producers = producers;
     }
 }

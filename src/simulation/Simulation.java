@@ -1,8 +1,6 @@
 package simulation;
 
-import entities.Consumer;
-import entities.Contract;
-import entities.Distributor;
+import entities.*;
 import utils.Constants;
 
 import java.util.ArrayList;
@@ -26,6 +24,11 @@ public final class Simulation {
      * List of distributors that are still in game.
      */
     private final List<Distributor> activeDistributors = new ArrayList<>();
+
+    /**
+     * List of producers that are still in game.
+     */
+    private final List<Producer> activeProducers = new ArrayList<>();
 
     private static Simulation simulation;
 
@@ -108,10 +111,10 @@ public final class Simulation {
      * Method that allows all consumers to pay to their distributors.
      */
     private void paymentAllConsumers() {
-        for (Consumer consumer : activeConsumers) {
+        activeConsumers.forEach(consumer -> {
             Distributor distributor = consumer.findContract();
             consumer.pay(distributor, Constants.DISTRIBUTOR);
-        }
+        });
     }
 
     /**
@@ -155,11 +158,17 @@ public final class Simulation {
      * bankrupt consumers.
      */
     private void removeContractsBankrupts() {
-        for (Consumer consumer : activeConsumers) {
-            if (consumer.isBankrupt()) {
-                consumer.removeContract(activeDistributors);
+        activeConsumers.stream().filter(Consumer::isBankrupt)
+                .forEach(consumer -> consumer.removeContract(activeDistributors));
+    }
+
+    private static void removeBankruptsFromProducer(Producer producer) {
+        producer.getClients().forEach(observer -> {
+            Distributor distributor = (Distributor) observer;
+            if (distributor.isBankrupt()) {
+                producer.removeObserver(observer);
             }
-        }
+        });
     }
 
     /**
@@ -168,6 +177,7 @@ public final class Simulation {
     private void removeAllBankrupts() {
         removeContractsBankrupts();
         activeConsumers.removeIf(Consumer::isBankrupt);
+        activeProducers.forEach(Simulation::removeBankruptsFromProducer);
         activeDistributors.removeIf(Distributor::isBankrupt);
     }
 
@@ -179,23 +189,50 @@ public final class Simulation {
      * @param distributors initial distributor players.
      */
     public void setGame(final int numberTurns, final List<MonthlyUpdate> updates,
-                        final List<Consumer> consumers, final List<Distributor> distributors) {
+                        final List<Consumer> consumers, final List<Distributor> distributors,
+                        final List<Producer> producers) {
         this.numberOfTurns = numberTurns;
         this.monthlyUpdates.addAll(updates);
         this.activeConsumers.addAll(consumers);
         this.activeDistributors.addAll(distributors);
+        this.activeProducers.addAll(producers);
     }
 
     /**
      * Method that runs the simulation
      */
     public void run() {
-        for (int i = 0; i <= numberOfTurns; i++) {
+        for (Distributor distributor : activeDistributors) {
+            // 2.a)
+            distributor.executeStrategy(activeProducers);
+            // 2.b)
+            distributor.calculateProductionCost();
+        }
+
+        // 3.
+        setOfferAllDistributor();
+        Distributor distributorBestOffer = getDistributorBestOffer();
+
+        removeFinishedContracts();
+        setNewContracts(distributorBestOffer);
+
+        addSalaryAllConsumers();
+        paymentAll();
+        removeAllBankrupts();
+
+        decrementAllContractsLength();
+
+        for (int i = 0; i < numberOfTurns; i++) {
+            // Inceput de luna
             MonthlyUpdate monthlyUpdate = monthlyUpdates.get(i);
-            monthlyUpdate.update(activeDistributors);
+
+            monthlyUpdate.updateConsumers(); // for consumers
+            monthlyUpdate.updateDistributor(activeDistributors); // for distributors
+
+            activeDistributors.forEach(Distributor::calculateProductionCost);
 
             setOfferAllDistributor();
-            Distributor distributorBestOffer = getDistributorBestOffer();
+            distributorBestOffer = getDistributorBestOffer();
 
             removeFinishedContracts();
             setNewContracts(distributorBestOffer);
@@ -205,6 +242,11 @@ public final class Simulation {
             removeAllBankrupts();
 
             decrementAllContractsLength();
+
+            // Mijlocul lunii
+
+
+
         }
     }
 
