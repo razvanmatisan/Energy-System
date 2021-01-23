@@ -126,9 +126,10 @@ public final class Consumer implements Entity {
      */
     @Override
     public void pay(final Entity entity, final String typeEntity) {
-        switch (typeEntity) {
-            case (Constants.DISTRIBUTOR) -> payToDistributor(entity);
-            default -> throw new IllegalStateException("Unexpected value: " + typeEntity);
+        if (Constants.DISTRIBUTOR.equals(typeEntity)) {
+            payToDistributor(entity);
+        } else {
+            throw new IllegalStateException("Unexpected value: " + typeEntity);
         }
     }
 
@@ -137,6 +138,6 @@ public final class Consumer implements Entity {
      */
     @Override
     public void getPaid(final long money) {
-
+        this.budget += money;
     }
 }

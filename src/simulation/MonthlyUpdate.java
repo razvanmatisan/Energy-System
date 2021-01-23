@@ -40,25 +40,44 @@ public final class MonthlyUpdate {
         this.producerChanges = producerChanges;
     }
 
-    public void updateConsumers() {
+    /**
+     * Method that updates all consumers after monthly updates.
+     */
+    private void updateConsumers() {
         Simulation simulation = Simulation.getInstance();
         EntityFactory factory = EntityFactory.getInstance();
         Database database = Database.getInstance();
 
         List<Consumer> consumers = newConsumers.stream()
-                .map(newConsumer -> (Consumer) factory.createEntity(newConsumer, Constants.CONSUMER))
+                .map(newConsumer
+                        -> (Consumer) factory.createEntity(newConsumer, Constants.CONSUMER))
                 .collect(Collectors.toList());
 
         database.addConsumers(consumers);
         simulation.addConsumers(consumers);
     }
 
-
-    public void updateDistributor(final List<Distributor> distributors) {
+    /**
+     * Method that updates all distributors after monthly updates.
+     */
+    private void updateDistributor(final List<Distributor> distributors) {
         distributorChanges.forEach(distributorChange -> distributorChange.update(distributors));
+        distributors.forEach(Distributor::calculateProductionCost);
     }
 
-    public void updateProducer(final List<Producer> producers) {
+    /**
+     * Method that updates all producers after monthly updates.
+     */
+    private void updateProducer(final List<Producer> producers) {
         producerChanges.forEach(producerChange -> producerChange.update(producers));
+    }
+
+    /**
+     * Method that updates all entities after monthly updates.
+     */
+    public void updateAll(List<Distributor> distributors, List<Producer> producers) {
+        updateConsumers();
+        updateDistributor(distributors);
+        updateProducer(producers);
     }
 }

@@ -2,7 +2,10 @@ package entities;
 
 import java.util.List;
 
-public class MonthlyStat {
+/**
+ * Class that stores the monthly stat of a producer.
+ */
+public final class MonthlyStat {
     private int month;
     private List<Integer> distributorsIds;
 

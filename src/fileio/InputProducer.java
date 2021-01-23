@@ -2,7 +2,7 @@ package fileio;
 
 import entities.EnergyType;
 
-public class InputProducer extends InputEntity {
+public final class InputProducer extends InputEntity {
     private int id;
     private EnergyType energyType;
     private int maxDistributors;

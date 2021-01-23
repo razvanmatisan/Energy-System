@@ -1,11 +1,18 @@
 package simulation;
 
-import entities.*;
+import entities.Consumer;
+import entities.Contract;
+import entities.Distributor;
+import entities.MonthlyStat;
 import entities.Observer;
+import entities.Producer;
 import utils.Constants;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Class that is used for implementing the logic of program
@@ -197,18 +204,7 @@ public final class Simulation {
         this.activeProducers.addAll(producers);
     }
 
-    /**
-     * Method that runs the simulation
-     */
-    public void run() {
-        for (Distributor distributor : activeDistributors) {
-            // 2.a)
-            distributor.executeStrategy(activeProducers);
-            // 2.b)
-            distributor.calculateProductionCost();
-        }
-
-        // 3.
+    private void beginningMonth() {
         setOfferAllDistributor();
         Distributor distributorBestOffer = getDistributorBestOffer();
 
@@ -220,56 +216,56 @@ public final class Simulation {
         removeAllBankrupts();
 
         decrementAllContractsLength();
+    }
 
+    private void initialRound() {
+        for (Distributor distributor : activeDistributors) {
+            distributor.executeStrategy(activeProducers);
+            distributor.calculateProductionCost();
+        }
+        beginningMonth();
+    }
+
+    private void createMonthlyStatAllProducers(int month) {
+        for (Producer producer : activeProducers) {
+            List<Integer> distributorIds = new ArrayList<>();
+
+            for (Observer client : producer.getClients()) {
+                Distributor distributor = (Distributor) client;
+                distributorIds.add(distributor.getId());
+            }
+
+            Collections.sort(distributorIds);
+
+            producer.addMonthlyStat(new MonthlyStat(month, distributorIds));
+        }
+    }
+
+    private void changeProducersFromDistributors() {
+        for (Distributor distributor : activeDistributors) {
+            if (distributor.getHaveToChangeProducers()) {
+                distributor.removeBankruptClients();
+                distributor.executeStrategy(activeProducers);
+                distributor.calculateProductionCost();
+                distributor.setHaveToChangeProducers(false);
+            }
+        }
+    }
+
+    /**
+     * Method that runs the simulation
+     */
+    public void run() {
+        initialRound();
 
         for (int i = 0; i < numberOfTurns; i++) {
-            // Inceput de luna
             MonthlyUpdate monthlyUpdate = monthlyUpdates.get(i);
+            monthlyUpdate.updateAll(activeDistributors, activeProducers);
 
-            monthlyUpdate.updateConsumers(); // for consumers
-            monthlyUpdate.updateDistributor(activeDistributors); // for distributors
+            beginningMonth();
 
-            activeDistributors.forEach(Distributor::calculateProductionCost);
-
-            setOfferAllDistributor();
-            distributorBestOffer = getDistributorBestOffer();
-
-            removeFinishedContracts();
-            setNewContracts(distributorBestOffer);
-
-            addSalaryAllConsumers();
-            paymentAll();
-            removeAllBankrupts();
-
-            decrementAllContractsLength();
-
-            // Mijlocul lunii
-
-            monthlyUpdate.updateProducer(activeProducers);
-
-            // Finalul lunii
-
-            for (Distributor distributor : activeDistributors) {
-                if (distributor.getHaveToChangeProducers()) {
-                    distributor.removeBankruptClients();
-                    distributor.executeStrategy(activeProducers);
-                    distributor.calculateProductionCost();
-                    distributor.setHaveToChangeProducers(false);
-                }
-            }
-
-            for (Producer producer : activeProducers) {
-                List<Integer> distributorIds = new ArrayList<>();
-
-                for (Observer client : producer.getClients()) {
-                    Distributor distributor = (Distributor) client;
-                    distributorIds.add(distributor.getId());
-                }
-
-                Collections.sort(distributorIds);
-
-                producer.addMonthlyStat(new MonthlyStat(i + 1, distributorIds));
-            }
+            changeProducersFromDistributors();
+            createMonthlyStatAllProducers(i + 1);
         }
     }
 

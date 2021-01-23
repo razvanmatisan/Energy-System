@@ -1,7 +1,14 @@
 import entities.Consumer;
 import entities.Distributor;
 import entities.Producer;
-import fileio.*;
+import fileio.InitialData;
+import fileio.Input;
+import fileio.InputConsumer;
+import fileio.InputDistributor;
+import fileio.InputLoader;
+import fileio.InputProducer;
+import fileio.Output;
+import fileio.OutputLoader;
 import simulation.Database;
 import simulation.MonthlyUpdate;
 import simulation.Simulation;
@@ -22,6 +29,7 @@ public final class Main {
      * @throws Exception might error when reading/writing/opening files, parsing JSON
      */
     public static void main(final String[] args) throws Exception {
+        /* Read Data */
         InputLoader inputLoader = new InputLoader(args[0]);
         Input input = inputLoader.readData();
 
@@ -34,6 +42,7 @@ public final class Main {
 
         List<MonthlyUpdate> monthlyUpdates = input.getMonthlyUpdates();
 
+        /* Create Database and convert entities: InputX -> X, where X is an Entity */
         Database database = Database.getInstance();
         database.addEntities(inputConsumers, inputDistributors, inputProducers);
 
@@ -41,12 +50,14 @@ public final class Main {
         List<Distributor> distributors = database.getDistributors();
         List<Producer> producers = database.getProducers();
 
+        /* Simulation */
         Simulation simulation = Simulation.getInstance();
         simulation.setGame(numberOfTurns, monthlyUpdates,
                 consumers, distributors, producers);
         simulation.run();
         simulation.exit();
 
+        /* Write in OutputFile */
         OutputLoader outputLoader = new OutputLoader(args[1]);
         outputLoader.writeData(new Output(consumers, distributors, producers));
 

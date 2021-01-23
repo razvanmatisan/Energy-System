@@ -21,7 +21,7 @@ public final class Distributor implements Entity, Observer {
 
     private boolean haveToChangeProducers;
     private StrategyPriorities strategy;
-    List<Producer> producers = new ArrayList<>();
+    private List<Producer> producers = new ArrayList<>();
 
     /**
      * Monthly offer for contract
@@ -46,8 +46,20 @@ public final class Distributor implements Entity, Observer {
         return strategyFactory.createStrategy(producerStrategy);
     }
 
-    public void executeStrategy(List<Producer> producers) {
-        this.producers = strategy.chooseProducers(producers, energyNeededKW);
+    /**
+     * Method that executes the assigned strategy
+     * @param producerList list of producers on which the strategy is applied.
+     */
+    public void executeStrategy(List<Producer> producerList) {
+        List<Producer> sortedProducers = strategy.sortProducers(producerList);
+        setFinalProducers(sortedProducers);
+        addDistributorToProducers();
+    }
+
+    /**
+     * Method that adds the current distributor to all his producers
+     */
+    private void addDistributorToProducers() {
         for (Producer producer : this.producers) {
             if (!producer.getClients().contains(this)) {
                 producer.addObserver(this);
@@ -55,6 +67,26 @@ public final class Distributor implements Entity, Observer {
         }
     }
 
+    /**
+     * Method that sets the final producers, after the strategy was applied.
+     */
+    private void setFinalProducers(List<Producer> producerList) {
+        producerList.removeIf(producer
+                -> producer.getMaxDistributors() == producer.getClients().size());
+        this.producers.clear();
+
+        int actualEnergy = 0;
+        for (Producer producer : producerList) {
+            if (actualEnergy < energyNeededKW) {
+                this.producers.add(producer);
+                actualEnergy += producer.getEnergyPerDistributor();
+            }
+        }
+    }
+
+    /**
+     * Method that removes the current distributor from all producer lists.
+     */
     public void removeBankruptClients() {
         for (Producer producer : producers) {
             if (producer.getClients().contains(this)) {
@@ -63,14 +95,23 @@ public final class Distributor implements Entity, Observer {
         }
     }
 
+    /**
+     * Method that calculates the production cost.
+     */
     public void calculateProductionCost() {
         double cost = producers.stream()
-                .mapToDouble(producer -> (producer.getEnergyPerDistributor() * producer.getPriceKW()))
+                .mapToDouble(producer
+                        -> (producer.getEnergyPerDistributor() * producer.getPriceKW()))
                 .sum();
 
         productionCost = Math.round(Math.floor(cost / 10));
     }
 
+    /**
+     * Method that sets a variable as true.
+     * This was made in order to make the changes only for those
+     * distributors who need to.
+     */
     @Override
     public void update() {
         this.haveToChangeProducers = true;
@@ -144,14 +185,6 @@ public final class Distributor implements Entity, Observer {
         this.producers = producers;
     }
 
-    public long getProductionCost() {
-        return productionCost;
-    }
-
-    public void setProductionCost(final int initialProductionCost) {
-        this.productionCost = initialProductionCost;
-    }
-
     public List<Contract> getContracts() {
         return contracts;
     }
@@ -220,6 +253,8 @@ public final class Distributor implements Entity, Observer {
     /**
      * Method that implements the payment process
      *
+     * Unfortunately, in this state of homework, the producer receives no money.
+     *
      * In this state of the project, it has been left empty, but it will be
      * implemented after new Entities will be introduced to the simulation.
      * @param entity payee
@@ -227,7 +262,12 @@ public final class Distributor implements Entity, Observer {
      */
     @Override
     public void pay(final Entity entity, final String typeEntity) {
+        long totalCost = infrastructureCost + productionCost * contracts.size();
+        budget -= totalCost;
 
+        if (budget < 0) {
+            isBankrupt = true;
+        }
     }
 
     /**

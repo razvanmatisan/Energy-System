@@ -12,10 +12,13 @@ public final class Producer implements Entity, Observable {
     private double priceKW;
     private int energyPerDistributor;
 
-    private boolean isRenewable;
+    /**
+     * Field that is used for Green Strategy.
+     */
+    private final boolean isRenewable;
 
     private List<MonthlyStat> monthlyStats = new ArrayList<>();
-    private List<Observer> clients = new ArrayList<>();
+    private final List<Observer> clients = new ArrayList<>();
 
     public Producer(InputProducer inputProducer) {
         this.id = inputProducer.getId();
@@ -26,21 +29,34 @@ public final class Producer implements Entity, Observable {
         this.energyPerDistributor = inputProducer.getEnergyPerDistributor();
     }
 
+    /**
+     * Method that sets the energy per distributor
+     * All the producers are then notified.
+     */
     public void setEnergyPerDistributor(int energyPerDistributor) {
         this.energyPerDistributor = energyPerDistributor;
         notifyAllObservers();
     }
 
+    /**
+     * Method that adds an observer to list.
+     */
     @Override
     public void addObserver(Observer observer) {
         clients.add(observer);
     }
 
+    /**
+     * Method that removes an observer from the list
+     */
     @Override
     public void removeObserver(Observer observer) {
         clients.remove(observer);
     }
 
+    /**
+     * Method that notifies all observers
+     */
     @Override
     public void notifyAllObservers() {
         clients.forEach(Observer::update);
@@ -58,10 +74,6 @@ public final class Producer implements Entity, Observable {
         return clients;
     }
 
-    public void setClients(List<Observer> clients) {
-        this.clients = clients;
-    }
-
     public boolean isRenewable() {
         return isRenewable;
     }
@@ -74,6 +86,9 @@ public final class Producer implements Entity, Observable {
         this.monthlyStats = monthlyStats;
     }
 
+    /**
+     * Method that adds a monthly stat for the current producer.
+     */
     public void addMonthlyStat(MonthlyStat monthlyStat) {
         monthlyStats.add(monthlyStat);
     }
@@ -108,11 +123,11 @@ public final class Producer implements Entity, Observable {
 
     @Override
     public void pay(Entity entity, String typeEntity) {
-
+        System.out.println("DO NOTHING BY NOW!");
     }
 
     @Override
     public void getPaid(long money) {
-
+        System.out.println("DO NOTHING BY NOW!");
     }
 }

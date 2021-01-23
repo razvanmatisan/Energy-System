@@ -9,7 +9,7 @@ public enum EnergyChoiceStrategyType {
     QUANTITY("QUANTITY");
     public final String label;
 
-    EnergyChoiceStrategyType(String label) {
+    EnergyChoiceStrategyType(final String label) {
         this.label = label;
     }
 }

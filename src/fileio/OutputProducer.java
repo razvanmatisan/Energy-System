@@ -5,7 +5,7 @@ import entities.MonthlyStat;
 
 import java.util.List;
 
-public class OutputProducer {
+public final class OutputProducer {
     private int id;
     private int maxDistributors;
     private double priceKW;

@@ -1,13 +1,11 @@
 package simulation;
 
-import entities.Distributor;
 import entities.Entity;
 import entities.Producer;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class ProducerChanges implements EntityChanges {
+public final class ProducerChanges implements EntityChanges {
     private int id;
     private int energyPerDistributor;
 

@@ -6,7 +6,7 @@ import entities.Entity;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DistributorChanges implements EntityChanges {
+public final class DistributorChanges implements EntityChanges {
     private int id;
     private int infrastructureCost;
 

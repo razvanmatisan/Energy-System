@@ -1,13 +1,8 @@
 package strategies;
 
-import entities.*;
-import fileio.InputConsumer;
-import fileio.InputDistributor;
-import fileio.InputEntity;
-import fileio.InputProducer;
 import utils.Constants;
 
-public class StrategyFactory {
+public final class StrategyFactory {
     private static StrategyFactory factory;
 
     private StrategyFactory() {
@@ -25,6 +20,10 @@ public class StrategyFactory {
         return factory;
     }
 
+    /**
+     * Method that creates a strategy based on its type.
+     * @return the strategy.
+     */
     public StrategyPriorities createStrategy(final EnergyChoiceStrategyType typeStrategy) {
         switch (typeStrategy.label) {
             case Constants.GREEN -> {

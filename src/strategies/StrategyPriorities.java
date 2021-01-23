@@ -5,6 +5,8 @@ import entities.Producer;
 import java.util.List;
 
 public interface StrategyPriorities {
-    List<Producer> chooseProducers(List<Producer> producers, int limit);
-
+    /**
+     * Method that sorts the producers based on a strategy.
+     */
+    List<Producer> sortProducers(List<Producer> producers);
 }
