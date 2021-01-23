@@ -1,6 +1,7 @@
 package fileio;
 
 import entities.Contract;
+import strategies.EnergyChoiceStrategyType;
 
 import java.util.List;
 
@@ -10,9 +11,9 @@ import java.util.List;
 public final class OutputDistributor {
     private int id;
     private int energyNeededKW;
-    private int contractCost;
+    private long contractCost;
     private int budget;
-    private String producerStrategy;
+    private EnergyChoiceStrategyType producerStrategy;
     private boolean isBankrupt;
 
     private List<Contract> contracts;
@@ -33,19 +34,19 @@ public final class OutputDistributor {
         this.energyNeededKW = energyNeededKW;
     }
 
-    public int getContractCost() {
+    public long getContractCost() {
         return contractCost;
     }
 
-    public void setContractCost(int contractCost) {
+    public void setContractCost(long contractCost) {
         this.contractCost = contractCost;
     }
 
-    public String getProducerStrategy() {
+    public EnergyChoiceStrategyType getProducerStrategy() {
         return producerStrategy;
     }
 
-    public void setProducerStrategy(String producerStrategy) {
+    public void setProducerStrategy(EnergyChoiceStrategyType producerStrategy) {
         this.producerStrategy = producerStrategy;
     }
 

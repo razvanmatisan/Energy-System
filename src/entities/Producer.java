@@ -1,24 +1,26 @@
 package entities;
 
 import fileio.InputProducer;
-import simulation.MonthlyUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class Producer implements Entity, Observable {
     private int id;
-    private String energyType;
+    private EnergyType energyType;
     private int maxDistributors;
     private double priceKW;
     private int energyPerDistributor;
 
-    private List<MonthlyStats> monthlyStats = new ArrayList<>();
+    private boolean isRenewable;
+
+    private List<MonthlyStat> monthlyStats = new ArrayList<>();
     private List<Observer> clients = new ArrayList<>();
 
     public Producer(InputProducer inputProducer) {
         this.id = inputProducer.getId();
         this.energyType = inputProducer.getEnergyType();
+        this.isRenewable = energyType.isRenewable();
         this.maxDistributors = inputProducer.getMaxDistributors();
         this.priceKW = inputProducer.getPriceKW();
         this.energyPerDistributor = inputProducer.getEnergyPerDistributor();
@@ -41,9 +43,7 @@ public final class Producer implements Entity, Observable {
 
     @Override
     public void notifyAllObservers() {
-        for (Observer client : clients) {
-            client.update();
-        }
+        clients.forEach(Observer::update);
     }
 
     public int getId() {
@@ -62,11 +62,27 @@ public final class Producer implements Entity, Observable {
         this.clients = clients;
     }
 
-    public String getEnergyType() {
+    public boolean isRenewable() {
+        return isRenewable;
+    }
+
+    public List<MonthlyStat> getMonthlyStats() {
+        return monthlyStats;
+    }
+
+    public void setMonthlyStats(List<MonthlyStat> monthlyStats) {
+        this.monthlyStats = monthlyStats;
+    }
+
+    public void addMonthlyStat(MonthlyStat monthlyStat) {
+        monthlyStats.add(monthlyStat);
+    }
+
+    public EnergyType getEnergyType() {
         return energyType;
     }
 
-    public void setEnergyType(String energyType) {
+    public void setEnergyType(EnergyType energyType) {
         this.energyType = energyType;
     }
 

@@ -17,8 +17,9 @@ public final class Distributor implements Entity, Observer {
     private int infrastructureCost;
     private long productionCost;
     private int energyNeededKW;
-    private String producerStrategy;
+    private EnergyChoiceStrategyType producerStrategy;
 
+    private boolean haveToChangeProducers;
     private StrategyPriorities strategy;
     List<Producer> producers = new ArrayList<>();
 
@@ -46,18 +47,41 @@ public final class Distributor implements Entity, Observer {
     }
 
     public void executeStrategy(List<Producer> producers) {
-        strategy.chooseProducers(producers);
+        this.producers = strategy.chooseProducers(producers, energyNeededKW);
+        for (Producer producer : this.producers) {
+            if (!producer.getClients().contains(this)) {
+                producer.addObserver(this);
+            }
+        }
+    }
+
+    public void removeBankruptClients() {
+        for (Producer producer : producers) {
+            if (producer.getClients().contains(this)) {
+                producer.removeObserver(this);
+            }
+        }
     }
 
     public void calculateProductionCost() {
-        productionCost = 0;
-        producers.forEach(producer -> productionCost += (producer.getEnergyPerDistributor() * producer.getPriceKW()));
-        productionCost = Math.round(Math.floor(productionCost/ 10));
+        double cost = producers.stream()
+                .mapToDouble(producer -> (producer.getEnergyPerDistributor() * producer.getPriceKW()))
+                .sum();
+
+        productionCost = Math.round(Math.floor(cost / 10));
     }
 
     @Override
     public void update() {
+        this.haveToChangeProducers = true;
+    }
 
+    public boolean getHaveToChangeProducers() {
+        return haveToChangeProducers;
+    }
+
+    public void setHaveToChangeProducers(boolean haveToChangeProducers) {
+        this.haveToChangeProducers = haveToChangeProducers;
     }
 
     public int getEnergyNeededKW() {
@@ -68,11 +92,11 @@ public final class Distributor implements Entity, Observer {
         this.energyNeededKW = energyNeededKW;
     }
 
-    public String getProducerStrategy() {
+    public EnergyChoiceStrategyType getProducerStrategy() {
         return producerStrategy;
     }
 
-    public void setProducerStrategy(String producerStrategy) {
+    public void setProducerStrategy(EnergyChoiceStrategyType producerStrategy) {
         this.producerStrategy = producerStrategy;
     }
 
@@ -110,6 +134,14 @@ public final class Distributor implements Entity, Observer {
 
     public void setInfrastructureCost(final int initialInfrastructureCost) {
         this.infrastructureCost = initialInfrastructureCost;
+    }
+
+    public List<Producer> getProducers() {
+        return producers;
+    }
+
+    public void setProducers(List<Producer> producers) {
+        this.producers = producers;
     }
 
     public long getProductionCost() {

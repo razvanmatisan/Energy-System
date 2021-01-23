@@ -25,9 +25,8 @@ public class StrategyFactory {
         return factory;
     }
 
-    public StrategyPriorities createStrategy(final String typeStrategy) {
-
-        switch (typeStrategy) {
+    public StrategyPriorities createStrategy(final EnergyChoiceStrategyType typeStrategy) {
+        switch (typeStrategy.label) {
             case Constants.GREEN -> {
                 return new GreenStrategy();
             }

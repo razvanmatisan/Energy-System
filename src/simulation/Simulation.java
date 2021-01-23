@@ -1,12 +1,11 @@
 package simulation;
 
 import entities.*;
+import entities.Observer;
 import utils.Constants;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class that is used for implementing the logic of program
@@ -222,6 +221,7 @@ public final class Simulation {
 
         decrementAllContractsLength();
 
+
         for (int i = 0; i < numberOfTurns; i++) {
             // Inceput de luna
             MonthlyUpdate monthlyUpdate = monthlyUpdates.get(i);
@@ -245,8 +245,31 @@ public final class Simulation {
 
             // Mijlocul lunii
 
+            monthlyUpdate.updateProducer(activeProducers);
 
+            // Finalul lunii
 
+            for (Distributor distributor : activeDistributors) {
+                if (distributor.getHaveToChangeProducers()) {
+                    distributor.removeBankruptClients();
+                    distributor.executeStrategy(activeProducers);
+                    distributor.calculateProductionCost();
+                    distributor.setHaveToChangeProducers(false);
+                }
+            }
+
+            for (Producer producer : activeProducers) {
+                List<Integer> distributorIds = new ArrayList<>();
+
+                for (Observer client : producer.getClients()) {
+                    Distributor distributor = (Distributor) client;
+                    distributorIds.add(distributor.getId());
+                }
+
+                Collections.sort(distributorIds);
+
+                producer.addMonthlyStat(new MonthlyStat(i + 1, distributorIds));
+            }
         }
     }
 

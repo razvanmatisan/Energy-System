@@ -2,9 +2,14 @@ package entities;
 
 import java.util.List;
 
-public class MonthlyStats {
+public class MonthlyStat {
     private int month;
     private List<Integer> distributorsIds;
+
+    public MonthlyStat(int month, List<Integer> distributorsIds) {
+        this.month = month;
+        this.distributorsIds = distributorsIds;
+    }
 
     public int getMonth() {
         return month;

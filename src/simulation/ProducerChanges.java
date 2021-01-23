@@ -29,11 +29,11 @@ public class ProducerChanges implements EntityChanges {
 
     @Override
     public void update(List<? extends Entity> entities) {
-        List<Producer> producers = new ArrayList<>((List<Producer>) entities);
+        List<Producer> producers = (List<Producer>) entities;
 
         producers.stream()
                 .filter(entity -> id == entity.getId())
                 .findAny()
-                .ifPresent(distributor -> distributor.setEnergyPerDistributor(energyPerDistributor));
+                .ifPresent(producer -> producer.setEnergyPerDistributor(energyPerDistributor));
     }
 }

@@ -48,7 +48,7 @@ public final class Main {
         simulation.exit();
 
         OutputLoader outputLoader = new OutputLoader(args[1]);
-        outputLoader.writeData(new Output(consumers, distributors));
+        outputLoader.writeData(new Output(consumers, distributors, producers));
 
         database.removeEntities();
     }

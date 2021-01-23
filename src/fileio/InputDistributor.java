@@ -1,5 +1,7 @@
 package fileio;
 
+import strategies.EnergyChoiceStrategyType;
+
 /**
  * Class used for parsing information about a distributor from input.
  */
@@ -9,7 +11,7 @@ public final class InputDistributor extends InputEntity {
     private int initialBudget;
     private int initialInfrastructureCost;
     private int energyNeededKW;
-    private String producerStrategy;
+    private EnergyChoiceStrategyType producerStrategy;
 
     public int getId() {
         return id;
@@ -51,11 +53,11 @@ public final class InputDistributor extends InputEntity {
         this.energyNeededKW = energyNeededKW;
     }
 
-    public String getProducerStrategy() {
+    public EnergyChoiceStrategyType getProducerStrategy() {
         return producerStrategy;
     }
 
-    public void setProducerStrategy(String producerStrategy) {
+    public void setProducerStrategy(EnergyChoiceStrategyType producerStrategy) {
         this.producerStrategy = producerStrategy;
     }
 }
