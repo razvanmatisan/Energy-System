@@ -43,7 +43,7 @@ public final class MonthlyUpdate {
     /**
      * Method that updates all consumers after monthly updates.
      */
-    private void updateConsumers() {
+    private void update() {
         Simulation simulation = Simulation.getInstance();
         EntityFactory factory = EntityFactory.getInstance();
         Database database = Database.getInstance();
@@ -75,8 +75,8 @@ public final class MonthlyUpdate {
     /**
      * Method that updates all entities after monthly updates.
      */
-    public void updateAll(List<Distributor> distributors, List<Producer> producers) {
-        updateConsumers();
+    public void update(List<Distributor> distributors, List<Producer> producers) {
+        update();
         updateDistributor(distributors);
         updateProducer(producers);
     }

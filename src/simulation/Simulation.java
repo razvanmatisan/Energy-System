@@ -260,7 +260,7 @@ public final class Simulation {
 
         for (int i = 0; i < numberOfTurns; i++) {
             MonthlyUpdate monthlyUpdate = monthlyUpdates.get(i);
-            monthlyUpdate.updateAll(activeDistributors, activeProducers);
+            monthlyUpdate.update(activeDistributors, activeProducers);
 
             beginningMonth();
 

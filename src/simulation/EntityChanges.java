@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface EntityChanges {
     /**
-     * Method that sets costs changes for a specific distributor/producer.
+     * Method that sets monthly changes for a specific distributor/producer.
      */
     void update(List<? extends Entity> entities);
 }
