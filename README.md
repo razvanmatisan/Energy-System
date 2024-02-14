@@ -1,13 +1,4 @@
-# Energy System 
-
-## Despre
-
-Programare Orientata pe Obiecte, Seriile CA, CD
-2020-2021
-
-<https://ocw.cs.pub.ro/courses/poo-ca-cd/teme/proiect/etapa2>
-
-Student: Matisan Razvan-Andrei
+# Energy System
 
 ## Rulare teste
 
