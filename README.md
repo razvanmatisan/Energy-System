@@ -7,7 +7,7 @@ Programare Orientata pe Obiecte, Seriile CA, CD
 
 <https://ocw.cs.pub.ro/courses/poo-ca-cd/teme/proiect/etapa2>
 
-Student: Matisan Razvan-Andrei, 324CA
+Student: Matisan Razvan-Andrei
 
 ## Rulare teste
 
