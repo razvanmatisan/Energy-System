@@ -1,4 +1,4 @@
-# Proiect Energy System Etapa 2
+# Energy System 
 
 ## Despre
 
