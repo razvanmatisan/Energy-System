@@ -102,7 +102,7 @@ si se creeaza un contract pentru toti consumatorii. La final, consumatorii isi
 primesc salariile, efectuaza platile impreuna cu distribuitorii, urmand ca 
 toate entitatile care au dat faliment sa fie scoase din joc.
 
-** Runda obisnuita**
+**Runda obisnuita**
 Intr-o runda obisnuita, exista niste update-uri lunare care se efectueaza la
 inceputul acesteia, ordinea fiind: update-uri pentru consumatori, distributori,
 respectiv producatori (pentru update-urile producatorilor, distributorii sunt 
