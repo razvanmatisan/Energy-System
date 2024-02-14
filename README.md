@@ -93,8 +93,7 @@ energia totala este cel putin cea de care are nevoie.
 In continuare, voi descrie mai amanuntit flow-ul programului pornind
 de la rundele jocului.
 
-**Runda 0**
-1. Toti distributorii inclusi in joc isi aleg, de la inceput, producatorii pe
+**Runda 0.** Toti distributorii inclusi in joc isi aleg, de la inceput, producatorii pe
 baza strategiei ce le-a fost asignata in fisierele de input. Apoi, li se
 calculeaza costul de productie, ce depinde de producatorii pe care ii are si
 pregatesc ofertele pentru Consumatori. Dupa aceea, se alege cea mai buna oferta,
@@ -102,8 +101,7 @@ si se creeaza un contract pentru toti consumatorii. La final, consumatorii isi
 primesc salariile, efectuaza platile impreuna cu distribuitorii, urmand ca 
 toate entitatile care au dat faliment sa fie scoase din joc.
 
-**Runda obisnuita**
-Intr-o runda obisnuita, exista niste update-uri lunare care se efectueaza la
+**Runda obisnuita.** Intr-o runda obisnuita, exista niste update-uri lunare care se efectueaza la
 inceputul acesteia, ordinea fiind: update-uri pentru consumatori, distributori,
 respectiv producatori (pentru update-urile producatorilor, distributorii sunt 
 notificati pentru a-si alege din nou producatorii la finalul lunii). 
