@@ -185,7 +185,6 @@ Una dintre cele mai mari dificultati pe care le-am intalnit la tema a fost
 utilizarea interfetei Entity, care contine metode de pay, respectiv getPaid.
 Deoarece la etapa 1 am vazut ca, in total, vor exista 4 entitati, m-am gandit
 ca platile va fi un numitor comun si pentru etapa a 2-a. Din pacate, m-am 
-inselat, iar 2/6 metode sunt, astfel, necompletate. Poate, cine stie, la o
-etapa a treia le voi implementa cu succes! :D
+inselat, iar 2/6 metode sunt, astfel, necompletate.
 
 
