@@ -22,27 +22,27 @@ Tutorial Jackson JSON:
 
 ### Entitati
 
-* Pachetul entities contine urmatoarele:
-- Interfata Entity, ce este implementata de clasele Consumer, Distributor,
-  Producer (cele 3 entitati ale simularii);
-- Clasa Contract - contine toate informatiile cu privire la contractul
-dintre Un Distributor si un Consumer;  
-- Interfetele Observer si Observable, implementate de clasele Distributor,
-  respectiv Producer -> ajuta la crearea Design Patter-ului de tip Observer;
-- EnergyType -> un enum cu toate tipurile de energii din joc;
-- Clasa MonthlyStat - contine informatii despre ceea ce trebuie sa contina un
-  MonthlyState pentru Producer
-- EntityFactory - clasa de tip factory din care se creeaza un nou obiect de tip
-  Entity.
+Pachetul entities contine urmatoarele:
+ - Interfata Entity, ce este implementata de clasele Consumer, Distributor,
+   Producer (cele 3 entitati ale simularii);
+ - Clasa Contract - contine toate informatiile cu privire la contractul
+ dintre Un Distributor si un Consumer;  
+ - Interfetele Observer si Observable, implementate de clasele Distributor,
+   respectiv Producer -> ajuta la crearea Design Patter-ului de tip Observer;
+ - EnergyType -> un enum cu toate tipurile de energii din joc;
+ - Clasa MonthlyStat - contine informatii despre ceea ce trebuie sa contina un
+   MonthlyState pentru Producer
+ - EntityFactory - clasa de tip factory din care se creeaza un nou obiect de tip
+   Entity.
 
-* Pachetul fileio contine doar clase care ajuta la citirea/afisarea datelor
+Pachetul fileio contine doar clase care ajuta la citirea/afisarea datelor
   in format JSON.
 
-* Pachetul utils include o singura clasa:
+Pachetul utils include o singura clasa:
 - Constants - clasa care tine evidenta tuturor constantelor folosite de-a
   lungul programului.
 
-* Pachetul simulation este format din:
+Pachetul simulation este format din:
 - Clasa Database - retine toate clasele care au facut parte din joc.
 - Interfata EntityChanges, ce este implementata de clasele DistributorChanges
   si ProducerChanges si contine o metoda de update care seteaza schimbarile
@@ -54,7 +54,7 @@ dintre Un Distributor si un Consumer;
   Mai mult, majoritatea operatiilor ce implica mai multe tipuri de entitati se
   realizeaza in cadrul acestei clase
 
-* Pachetul strategies include:
+Pachetul strategies include:
 - EnergyChoiceStrategyType - un enum cu toate tipurile de strategii
 - 3 clase reprezentative pentru fiecare tip de strategie: GreenStrategy,
 PriceStrategy, QuantityStrategy
@@ -93,7 +93,7 @@ energia totala este cel putin cea de care are nevoie.
 In continuare, voi descrie mai amanuntit flow-ul programului pornind
 de la rundele jocului.
 
-* Runda 0
+**Runda 0**
 1. Toti distributorii inclusi in joc isi aleg, de la inceput, producatorii pe
 baza strategiei ce le-a fost asignata in fisierele de input. Apoi, li se
 calculeaza costul de productie, ce depinde de producatorii pe care ii are si
@@ -102,7 +102,7 @@ si se creeaza un contract pentru toti consumatorii. La final, consumatorii isi
 primesc salariile, efectuaza platile impreuna cu distribuitorii, urmand ca 
 toate entitatile care au dat faliment sa fie scoase din joc.
 
-* Runda obisnuita
+** Runda obisnuita**
 Intr-o runda obisnuita, exista niste update-uri lunare care se efectueaza la
 inceputul acesteia, ordinea fiind: update-uri pentru consumatori, distributori,
 respectiv producatori (pentru update-urile producatorilor, distributorii sunt 
@@ -168,14 +168,4 @@ Producer efectueaza un update in acea luna. Astfel, mi-am creat doua interfete:
 una pentru Observer (Distributorii) si una pentru Observable (Producatorul); in
 momentul in care un Producator isi schimba EnergyPerDistributor, toti
 distributorii sunt notificati, setandu-si un "flag" ca fiind True astfel incat
-la finalul lunii acestia sa-si reaplice strategia.  
-
-### Dificultati intalnite, limitari, probleme
-
-Una dintre cele mai mari dificultati pe care le-am intalnit la tema a fost
-utilizarea interfetei Entity, care contine metode de pay, respectiv getPaid.
-Deoarece la etapa 1 am vazut ca, in total, vor exista 4 entitati, m-am gandit
-ca platile va fi un numitor comun si pentru etapa a 2-a. Din pacate, m-am 
-inselat, iar 2/6 metode sunt, astfel, necompletate.
-
-
+la finalul lunii acestia sa-si reaplice strategia.
